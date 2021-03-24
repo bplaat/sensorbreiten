@@ -1,0 +1,133 @@
+@view('layout.header', [ 'title' => 'Settings' ])
+
+<h1 class="title">Settings</h1>
+
+@session('message'):
+    <div class="notification is-success">
+        <button class="delete"></button>
+        <p>{{ session('message') }}</p>
+    </div>
+@endif
+
+<form class="box" method="POST" action="{{ route('settings.change_details') }}">
+    @csrf()
+
+    <h2 class="title is-4">Change user details</h2>
+
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label" for="firstname">Firstname</label>
+
+                <div class="control">
+                    <input class="input {{ hasErrors('firstname') ? 'is-danger' : '' }}" type="text" id="firstname"
+                        name="firstname" value="{{ old('firstname', Auth::user()->firstname) }}" required>
+                </div>
+
+                @foreach (errors('firstname') as $error):
+                    <p class="help is-danger">{{ $error }}</p>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="field">
+                <label class="label" for="lastname">Lastname</label>
+
+                <div class="control">
+                    <input class="input {{ hasErrors('lastname') ? 'is-danger' : '' }}" type="text" id="lastname"
+                        name="lastname" value="{{ old('lastname', Auth::user()->lastname) }}" required>
+                </div>
+
+                @foreach (errors('lastname') as $error):
+                    <p class="help is-danger">{{ $error }}</p>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="email">Email address</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('email') ? 'is-danger' : '' }}" type="email" id="email"
+                name="email" value="{{ old('email', Auth::user()->email) }}" required>
+
+            @foreach (errors('email') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-link" type="submit">Save</button>
+        </div>
+    </div>
+</form>
+
+<form class="box" method="POST" action="{{ route('settings.change_password') }}">
+    @csrf()
+
+    <h2 class="title is-4">Change password</h2>
+
+    <div class="field">
+        <label class="label" for="current_password">Current password</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('current_password') ? 'is-danger' : '' }}" type="password"
+                id="current_password" name="current_password" required>
+
+            @foreach (errors('current_password') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="password">New password</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('password') ? 'is-danger' : '' }}"
+                type="password" id="password" name="password" required>
+
+            @foreach (errors('password') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="password_confirmation">Confirm new password</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('password') ? 'is-danger' : '' }}" type="password"
+                id="password_confirmation" name="password_confirmation" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-link" type="submit">Save</button>
+        </div>
+    </div>
+</form>
+
+<div class="box">
+    <h2 class="title is-4">Active sessions</h2>
+    @foreach ($activeSessions as $session):
+        <div class="box content">
+            <h3 class="title is-5">
+                {{ $session->ip_city }}, {{ countryName($session->ip_country) }} ({{ $session->ip }})
+                using {{ $session->browser }} {{ $session->browser_version }} on {{ $session->platform }}
+                @if ($session->session == Auth::session()):
+                    <div class="tag is-link" style="margin-left: 8px;">Current session</div>
+                @endif
+            </h3>
+            <p>Created on <strong>{{ $session->created_at }}</strong>, last used on <strong>{{ $session->updated_at }}</strong> and expires on <strong>{{ $session->expires_at }}</strong></p>
+            <p><a class="button is-danger" href="{{ route('settings.revoke_session', $session) }}">Revoke session</a></p>
+        </div>
+    @endforeach
+</div>
+
+@view('layout.footer')

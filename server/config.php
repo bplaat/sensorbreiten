@@ -1,0 +1,27 @@
+<?php
+
+return [
+    // App configuration
+    'app' => [
+        'name' => 'SensorBreiten',
+        'version' => '0.1.0',
+        'debug' => ($_SERVER['HTTP_HOST'] ?? '') == 'sensorbreiten.local'
+    ],
+
+    // Database configuration
+    'database' => [
+        'connection' => 'mysql',
+        'host' => '127.0.0.1',
+        'port' => 3306,
+        'user' => 'sensorbreiten',
+        'password' => 'sensorbreiten',
+        'name' => 'sensorbreiten'
+    ],
+
+    // Session configuration
+    'session' => [
+        'cookie_name' => 'sensorbreiten_session',
+        'duration' => 60 * 60 * 24 * 356,
+        'update_duration' => 60 * 5
+    ]
+];

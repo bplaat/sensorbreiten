@@ -1,0 +1,48 @@
+@view('layout.header', [ 'title' => 'Login' ])
+
+<h1 class="title">Login</h1>
+
+@session('message'):
+    <div class="notification is-success">
+        <button class="delete"></button>
+        <p>{{ session('message') }}</p>
+    </div>
+@endif
+
+<form method="POST">
+    @csrf()
+
+    <div class="field">
+        <label class="label" for="email">Email address</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('email') ? 'is-danger' : '' }}" type="email" id="email"
+                name="email" value="{{ old('email') }}" autofocus required>
+        </div>
+
+        @foreach (errors('email') as $error):
+            <p class="help is-danger">{{ $error }}</p>
+        @endforeach
+    </div>
+
+    <div class="field">
+        <label class="label" for="password">Password</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('email') || hasErrors('password') ? 'is-danger' : '' }}"
+                type="password" id="password" name="password" required>
+        </div>
+
+        @foreach (errors('password') as $error):
+            <p class="help is-danger">{{ $error }}</p>
+        @endforeach
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-link" type="submit">Login</button>
+        </div>
+    </div>
+</form>
+
+@view('layout.footer')

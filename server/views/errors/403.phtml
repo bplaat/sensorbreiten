@@ -1,0 +1,9 @@
+@view('layout.header', [ 'title' => '403 Forbidden' ])
+
+<div class="content">
+    <h1 class="title">403 Forbidden</h1>
+    <p>The requested URL <code>{{ $_SERVER['REQUEST_URI'] }}</code> requires authorization on this server</p>
+    <p>If you entered the URL manually please login and try again</p>
+</div>
+
+@view('layout.footer')
