@@ -23,5 +23,10 @@ return [
         'cookie_name' => 'sensorbreiten_session',
         'duration' => 60 * 60 * 24 * 356,
         'update_duration' => 60 * 5
+    ],
+
+    // OpenWeatherMap API configuration
+    'openweathermap' => [
+        'api_key' => ''
     ]
 ];
