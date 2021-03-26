@@ -86,7 +86,7 @@ class EventsController {
             'type' => $fields['type'],
             'frequency' => $fields['frequency'],
             'duration' => $fields['duration'],
-            'active' => false
+            'active' => 0
         ]);
 
         // Redirect to the event show page

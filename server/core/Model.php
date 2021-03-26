@@ -153,6 +153,6 @@ abstract class Model {
 
     public static function create(array $values): object {
         static::insert($values);
-        return static::select(Database::lastInsertId());
+        return static::first(Database::lastInsertId());
     }
 }

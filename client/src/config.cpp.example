@@ -1,7 +1,6 @@
 #include "config.hpp"
 
-String api_url = "";
-String https_fingerprint = "";
+String api_url = "http://sensorbreiten.ml/api";
 
 String station_api_key = "";
 

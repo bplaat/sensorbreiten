@@ -27,12 +27,12 @@ class ApiMeasurementsController {
 
         $events = Events::all([ 'station_id' => $station->id ]);
         foreach ($events as $event) {
-            $latestOutsideMeasurementQuery = Stations::latestOutsideMeasurement($station);
-            if ($latestOutsideMeasurementQuery->rowCount() == 1) {
-                $latestOutsideMeasurement = $latestOutsideMeasurementQuery->fetch();
+            // $latestOutsideMeasurementQuery = Stations::latestOutsideMeasurement($station);
+            // if ($latestOutsideMeasurementQuery->rowCount() == 1) {
+            //     $latestOutsideMeasurement = $latestOutsideMeasurementQuery->fetch();
 
-                if (static::runTrigger($event->trigger, time(), time() - strtotime('today'), $measurement->temperature, $measurement->humidity, $measurement->light, $latestOutsideMeasurement->temperature, $latestOutsideMeasurement->humidity)) {
-                    Events::update($event, [ 'active' => true ]);
+                if (static::runTrigger($event->trigger, time(), time() - strtotime('today'), $measurement->temperature, $measurement->humidity, $measurement->light, 0, 0)) { // $latestOutsideMeasurement->temperature, $latestOutsideMeasurement->humidity)) {
+                    Events::update($event, [ 'active' => 1 ]);
 
                     if ($event->type == Events::TYPE_LED) {
                         $sendEvents[] = [ 'type' => Events::TYPE_LED, 'duration' => $event->duration ];
@@ -42,9 +42,9 @@ class ApiMeasurementsController {
                         $sendEvents[] = [ 'type' => Events::TYPE_BEEPER, 'frequency' => $event->frequency, 'duration' => $event->duration ];
                     }
                 } else {
-                    Events::update($event->id, [ 'active' => false ]);
+                    Events::update($event->id, [ 'active' => 0 ]);
                 }
-            }
+            // }
         }
 
         // Send response with triggered events
