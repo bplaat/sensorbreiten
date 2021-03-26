@@ -161,7 +161,7 @@ class Route {
         static::handleResponse(abort(404));
     }
 
-    public static function route(string $name, ...$parameters): ?string {
+    public static function getRoute(string $name, ...$parameters): ?string {
         foreach (static::$routes as $route) {
             if (($route->name ?? '') == $name) {
 
@@ -185,5 +185,5 @@ class Route {
 }
 
 function route(string $name, ...$parameters): ?string {
-    return Route::route($name, ...$parameters);
+    return Route::getRoute($name, ...$parameters);
 }

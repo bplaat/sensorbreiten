@@ -26,7 +26,7 @@ class EventsController {
     public static function store() {
         // Validate input
         $fields = validate([
-            'station_id' => 'required|int|exists:stations,id',
+            'station_id' => 'required|int|exists:Stations,id',
             'name' => 'required|min:2|max:48',
             'trigger' => [ 'required', 'Events::validateTrigger' ],
             'type' => 'required|int|number_between:' . Events::TYPE_LED . ',' . Events::TYPE_BEEPER,
@@ -70,7 +70,7 @@ class EventsController {
     public static function update($event) {
         // Validate input
         $fields = validate([
-            'station_id' => 'required|int|exists:stations,id',
+            'station_id' => 'required|int|exists:Stations,id',
             'name' => 'required|min:2|max:48',
             'trigger' => [ 'required', 'Events::validateTrigger' ],
             'type' => 'required|int|number_between:' . Events::TYPE_LED . ',' . Events::TYPE_BEEPER,

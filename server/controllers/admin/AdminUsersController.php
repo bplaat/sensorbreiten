@@ -16,7 +16,7 @@ class AdminUsersController {
         $fields = validate([
             'firstname' => 'required|min:2|max:48',
             'lastname' => 'required|min:2|max:48',
-            'email' => 'required|email|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:Users',
             'password' => 'required|min:6|confirmed',
             'role' => 'required|int|number_between:' . Users::ROLE_NORMAL . ',' . Users::ROLE_ADMIN
         ]);
@@ -50,7 +50,7 @@ class AdminUsersController {
         $fields = validate([
             'firstname' => 'required|min:2|max:48',
             'lastname' => 'required|min:2|max:48',
-            'email' => 'required|email|max:255|unique_except:users,email,' . $user->email,
+            'email' => 'required|email|max:255|unique_except:Users,email,' . $user->email,
             'role' => 'required|int|number_between:' . Users::ROLE_NORMAL . ',' . Users::ROLE_ADMIN
         ]);
 

@@ -15,7 +15,7 @@ class SettingsController {
         $fields = validate([
             'firstname' => 'required|min:2|max:191',
             'lastname' => 'required|min:2|max:191',
-            'email' => 'required|email|max:191|unique_except:users,email,' . Auth::user()->email
+            'email' => 'required|email|max:191|unique_except:Users,email,' . Auth::user()->email
         ]);
 
         Users::update(Auth::user(), [

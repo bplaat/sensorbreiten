@@ -29,7 +29,7 @@ class Stations extends Model {
         if (is_numeric($where)) $where = [ 'station_id' => $where ];
         if (is_object($where)) $where = [ 'station_id' => $where->{static::primaryKey()} ];
         foreach ($where as $key => $value) $wheres[] = '`' . $key . '` = ?';
-        return Database::query('SELECT * FROM `measurements` WHERE ' . implode(' AND ', $wheres) . ' ORDER BY `created_at` DESC LIMIT 1', ...$where);
+        return Database::query('SELECT * FROM `measurements` WHERE ' . implode(' AND ', $wheres) . ' ORDER BY `created_at` DESC LIMIT 1', ...array_values($where));
     }
 
     // Get the measurements by day
@@ -45,7 +45,7 @@ class Stations extends Model {
         if (is_numeric($where)) $where = [ 'station_id' => $where ];
         if (is_object($where)) $where = [ 'station_id' => $where->{static::primaryKey()} ];
         foreach ($where as $key => $value) $wheres[] = '`' . $key . '` = ?';
-        return Database::query('SELECT * FROM `outside_measurements` WHERE ' . implode(' AND ', $wheres) . ' ORDER BY `created_at` DESC LIMIT 1', ...$where);
+        return Database::query('SELECT * FROM `outside_measurements` WHERE ' . implode(' AND ', $wheres) . ' ORDER BY `created_at` DESC LIMIT 1', ...array_values($where));
     }
 
     // Get the outside measurements by day

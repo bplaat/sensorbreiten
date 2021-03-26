@@ -5,7 +5,7 @@ require_once ROOT . '/core/autoloader.php';
 require_once ROOT . '/core/utils.php';
 require_once ROOT . '/core/config.php';
 require_once ROOT . '/core/validate.php';
-require_once ROOT . '/core/view.php';
+require_once ROOT . '/core/View.php';
 require_once ROOT . '/core/parse_user_agent.php';
 
 // Load routes

@@ -9,8 +9,8 @@ class Auth {
         $session = Sessions::generateSession();
 
         $ip = getIP();
-        $ipInfo = json_decode(file_get_contents('https://ipinfo.io/' . $ip . '/json'));
-        $ipLocation = explode(',', $ipInfo->loc ?? '');
+        $ipInfo = json_decode('{}'); // file_get_contents('https://ipinfo.io/' . $ip . '/json'));
+        $ipLocation = explode(',', $ipInfo->loc ?? '52.0,4.7');
         $user_agent = parse_user_agent();
 
         Sessions::insert([
@@ -19,8 +19,8 @@ class Auth {
             'ip' => $ip,
             'ip_country' => $ipInfo->country ?? '?',
             'ip_city' => $ipInfo->city ?? '?',
-            'ip_lat' => $ipLocation[0] ?? 0,
-            'ip_lng' => $ipLocation[1] ?? 0,
+            'ip_lat' => $ipLocation[0],
+            'ip_lng' => $ipLocation[1],
             'platform' => $user_agent['platform'] ?? '?',
             'browser' => $user_agent['browser'] ?? '?',
             'browser_version' =>  $user_agent['version'] ?? '?',
@@ -45,8 +45,8 @@ class Auth {
         }
 
         $ip = getIP();
-        $ipInfo = json_decode(file_get_contents('https://ipinfo.io/' . $ip . '/json'));
-        $ipLocation = explode(',', $ipInfo->loc ?? '');
+        $ipInfo = json_decode('{}'); // file_get_contents('https://ipinfo.io/' . $ip . '/json'));
+        $ipLocation = explode(',', $ipInfo->loc ?? '52.0,4.7');
         $user_agent = parse_user_agent();
 
         Sessions::update([
@@ -55,8 +55,8 @@ class Auth {
             'ip' => $ip,
             'ip_country' => $ipInfo->country ?? '?',
             'ip_city' => $ipInfo->city ?? '?',
-            'ip_lat' => $ipLocation[0] ?? 0,
-            'ip_lng' => $ipLocation[1] ?? 0,
+            'ip_lat' => $ipLocation[0],
+            'ip_lng' => $ipLocation[1],
             'platform' => $user_agent['platform'] ?? '?',
             'browser' => $user_agent['browser'] ?? '?',
             'browser_version' =>  $user_agent['version'] ?? '?',

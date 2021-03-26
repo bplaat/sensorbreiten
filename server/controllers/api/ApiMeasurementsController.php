@@ -5,7 +5,7 @@ class ApiMeasurementsController {
     public static function store() {
         // Validate input
         $fields = validate([
-            'key' => 'required|size:32|exists:stations',
+            'key' => 'required|size:32|exists:Stations',
             'temperature' => 'required|float',
             'humidity' => 'required|float',
             'light' => 'required|float',
