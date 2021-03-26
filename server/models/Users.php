@@ -13,7 +13,7 @@ class Users extends Model {
             `lastname` VARCHAR(191) NOT NULL,
             `email` VARCHAR(191) NOT NULL,
             `password` VARCHAR(191) NOT NULL,
-            `role` TINYINT NOT NULL DEFAULT ' . Users::ROLE_NORMAL . ',
+            `role` TINYINT NOT NULL DEFAULT ' . static::ROLE_NORMAL . ',
 
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -33,6 +33,7 @@ class Users extends Model {
         ]);
     }
 
+    // Get all active sessions of a user
     public static function activeSessions($where): PDOStatement {
         if (is_numeric($where)) $where = [ 'user_id' => $where ];
         if (is_object($where)) $where = [ 'user_id' => $where->{static::primaryKey()} ];

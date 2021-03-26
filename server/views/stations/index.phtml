@@ -1,0 +1,63 @@
+@view('layout.header', [ 'title' => 'Stations', 'use_leaflet' => true ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li class="is-active"><a href="{{ route('stations.index') }}">Stations</a></li>
+    </ul>
+</div>
+
+<div class="content">
+    <h1 class="title">Stations</h1>
+
+    @if (count($stations) > 0):
+        <div class="buttons">
+            @foreach ($stations as $station):
+                <a class="button" href="{{ route('stations.show', $station) }}">{{ $station->name }}</a>
+            @endforeach
+        </div>
+
+        <div class="box" style="position: relative; padding-top: 55%; overflow: hidden;">
+            <div id="map-container" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
+        </div>
+
+        <script>
+            var stationsInfo = JSON.parse('{!! json_encode($stationsInfo, JSON_HEX_APOS) !!}');
+
+            var map = L.map('map-container').setView(stationsInfo[0].point, 11);
+
+            map.attributionControl.setPrefix('');
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            for (var i = 0; i < stationsInfo.length; i++) {
+                var popupHtml = '<p style="margin: 8px 0;"><a href="/stations/' + stationsInfo[i].id + '">' + stationsInfo[i].name + '</a></p>';
+
+                if (stationsInfo[i].temperature != undefined) {
+                    popupHtml += '<p style="margin: 4px 0;">Temperature: ' + stationsInfo[i].temperature + ' \u00B0C</p>' +
+                        '<p style="margin: 4px 0;">Humidity: ' + stationsInfo[i].humidity + ' %</p>' +
+                        '<p style="margin: 4px 0;">Light strength: ' + stationsInfo[i].light + '  lux</p>';
+                }
+
+                if (stationsInfo[i].outside_temperature != undefined) {
+                    popupHtml += '<p style="margin: 4px 0;">Outside Temperature: ' + stationsInfo[i].outside_temperature + ' \u00B0C</p>' +
+                        '<p style="margin: 4px 0;">Outside Humidity: ' + stationsInfo[i].outside_humidity + ' %</p>';
+                }
+
+                L.marker(stationsInfo[i].point).bindPopup(popupHtml).addTo(map);
+            }
+        </script>
+    @else:
+        <p><i>There are no stations found</i></p>
+    @endif
+
+    @if (Auth::user()->role >= Users::ROLE_MODERATOR):
+        <div class="buttons">
+            <a class="button is-link" href="{{ route('stations.create') }}">Create station</a>
+        </div>
+    @endif
+</div>
+
+@view('layout.footer')

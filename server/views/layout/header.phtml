@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{{ $title }} - SensorBreiten</title>
     <link rel="stylesheet" href="/css/bulma.min.css">
+    @if (isset($use_leaflet)):
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+    @endif
+    @if (isset($use_chart)):
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    @endif
 </head>
 <body>
-    <div class="navbar is-light is-fixed-top">
+    <div class="navbar is-light is-fixed-top" style="z-index: 999999;">
         <div class="container">
             <div class="navbar-brand">
                 <a class="navbar-item has-text-weight-bold" href="{{ route('home') }}">SensorBreiten</a>
@@ -15,9 +22,44 @@
             </div>
             <div class="navbar-menu">
                 @auth:
-                    <!-- <div class="navbar-start">
-                        <a class="navbar-item" href="/">TODO</a>
-                    </div> -->
+                    <div class="navbar-start">
+                        @$stations = Stations::all()
+                        @if (count($stations ) > 0):
+                            <div class="navbar-item has-dropdown is-hoverable">
+                                <a class="navbar-link is-arrowless" href="{{ route('stations.index') }}">Stations</a>
+                                <div class="navbar-dropdown">
+                                    @foreach ($stations as $station):
+                                        <a class="navbar-item" href="{{ route('stations.show', $station) }}">{{ $station->name }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @else:
+                            <a class="navbar-item" href="{{ route('stations.index') }}">Stations</a>
+                        @endif
+
+                        @$events = Events::all()
+                        @if (count($events ) > 0):
+                            <div class="navbar-item has-dropdown is-hoverable">
+                                <a class="navbar-link is-arrowless" href="{{ route('events.index') }}">Events</a>
+                                <div class="navbar-dropdown">
+                                    @foreach ($events as $event):
+                                        <a class="navbar-item" href="{{ route('events.show', $event) }}">{{ $event->name }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @else:
+                            <a class="navbar-item" href="{{ route('events.index') }}">Events</a>
+                        @endif
+
+                        @if (Auth::user()->role == Users::ROLE_ADMIN):
+                            <div class="navbar-item has-dropdown is-hoverable">
+                                <a class="navbar-link is-arrowless" href="{{ route('admin.home') }}">Admin</a>
+                                <div class="navbar-dropdown">
+                                    <a class="navbar-item" href="{{ route('admin.users.index') }}">Users</a>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
 
                     <div class="navbar-end">
                         <div class="navbar-item" style="display: flex; align-items: center;">

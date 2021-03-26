@@ -5,6 +5,24 @@ function validate(array $values): array {
     $fields = [];
     $errors = [];
 
+    // Check CSRF token
+    if (!defined('IS_API')) {
+        if (request('_csrf_token') == null) {
+            $errors['_csrf_token'] = [
+                'You did not use the cross-site request forgery token'
+            ];
+        } else {
+            if (hash_equals(request('_csrf_token'), Session::get('_csrf_token'))) {
+                Session::set('_csrf_token', bin2hex(random_bytes(16)));
+            } else {
+                $errors['_csrf_token'] = [
+                    'Your cross-site request forgery token is not valid'
+                ];
+            }
+        }
+    }
+
+    // Other validation rules
     foreach ($values as $key => $rules) {
         if (!is_array($rules)) {
             $rules = explode('|', $rules);
@@ -102,7 +120,12 @@ function validate(array $values): array {
     }
 
     if (count($errors) > 0) {
-        Redirect::back()->withInput()->withErrors($errors)->run();
+        if (defined('IS_API')) {
+            http_response_code(400);
+            dd($errors);
+        } else {
+            Redirect::back()->withInput()->withErrors($errors)->run();
+        }
     }
 
     return $fields;

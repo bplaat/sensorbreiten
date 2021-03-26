@@ -1,0 +1,114 @@
+@view('layout.header', [ 'title' => 'Edit - ' . $user->firstname . ' ' . $user->lastname . ' - Users - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li><a href="{{ route('admin.home') }}">Admin</a></li>
+        <li><a href="{{ route('admin.users.index') }}">Users</a></li>
+        <li><a href="{{ route('admin.users.show', $user) }}">{{ $user->firstname }} {{ $user->lastname }}</a></li>
+        <li class="is-active"><a href="{{ route('admin.users.edit', $user) }}">Edit</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Edit user</h1>
+
+<form method="POST" action="{{ route('admin.users.update', $user) }}">
+    @csrf()
+
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label" for="firstname">Firstname</label>
+
+                <div class="control">
+                    <input class="input {{ hasErrors('firstname') ? 'is-danger' : '' }}" type="text" id="firstname"
+                        name="firstname" value="{{ old('firstname', $user->firstname) }}" required>
+                </div>
+
+                @foreach (errors('firstname') as $error):
+                    <p class="help is-danger">{{ $error }}</p>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="field">
+                <label class="label" for="lastname">Lastname</label>
+
+                <div class="control">
+                    <input class="input {{ hasErrors('lastname') ? 'is-danger' : '' }}" type="text" id="lastname"
+                        name="lastname" value="{{ old('lastname', $user->lastname) }}" required>
+                </div>
+
+                @foreach (errors('lastname') as $error):
+                    <p class="help is-danger">{{ $error }}</p>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="email">Email address</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('email') ? 'is-danger' : '' }}" type="email" id="email"
+                name="email" value="{{ old('email', $user->email) }}" required>
+
+            @foreach (errors('email') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="password">New password</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('password') ? 'is-danger' : '' }}"
+                type="password" id="password" name="password">
+
+            @if (count(errors('password')) > 0):
+                @foreach (errors('password') as $error):
+                    <p class="help is-danger">{{ $error }}</p>
+                @endforeach
+            @else:
+                <p class="help">Leave the password fields empty if you don\'t want to change them</p>
+            @endif
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="password_confirmation">Confirm new password</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('password') ? 'is-danger' : '' }}" type="password"
+                id="password_confirmation" name="password_confirmation">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="role">Role</label>
+
+        <div class="control">
+            <div class="select is-fullwidth {{ hasErrors('role') ? 'is-danger' : '' }}"">
+                <select id="role" name="role" required>
+                    <option value="{{ Users::ROLE_NORMAL }}" {{ old('role', $user->role) == Users::ROLE_NORMAL ? 'selected' : '' }}>Normal</option>
+                    <option value="{{ Users::ROLE_MODERATOR }}" {{ old('role', $user->role) == Users::ROLE_MODERATOR ? 'selected' : '' }}>Moderator</option>
+                    <option value="{{ Users::ROLE_ADMIN }}" {{ old('role', $user->role) == Users::ROLE_ADMIN ? 'selected' : '' }}>Admin</option>
+                </select>
+            </div>
+
+            @foreach (errors('role') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-link" type="submit">Edit user</button>
+        </div>
+    </div>
+</form>
+
+@view('layout.footer')

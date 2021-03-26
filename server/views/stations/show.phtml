@@ -1,0 +1,171 @@
+@view('layout.header', [ 'title' => $station->name . ' - Stations', 'use_leaflet' => true, 'use_chart' => true ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li><a href="{{ route('stations.index') }}">Stations</a></li>
+        <li class="is-active"><a href="{{ route('stations.show', $station) }}">{{ $station->name }}</a></li>
+    </ul>
+</div>
+
+<div class="box content">
+    <h1 class="title">{{ $station->name }}</h1>
+
+    @if (Auth::user()->role >= Users::ROLE_MODERATOR):
+        <p><code>{{ $station->key }}</code></p>
+        <div class="buttons">
+            <a class="button is-link" href="/stations/{{ $station->id }}/edit">Edit station</a>
+            <a class="button is-danger" href="/stations/{{ $station->id }}/delete">Delete station</a>
+        </div>
+    @endif
+</div>
+
+<div class="box" style="position: relative; padding-top: 45%; overflow: hidden;">
+    <div id="map-container" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
+</div>
+
+<div class="has-text-centered-desktop">
+    <h2 class="subtitle is-3">{{ date('l d F Y', $day) }}</h2>
+
+    <div class="buttons has-addons is-centered">
+        <a class="button" href="{{ route('stations.show', $station) }}?day={{ date('Y-m-d', $day - 24 * 60 * 60) }}">&laquo; &nbsp;Previous day</a>
+        <a class="button" href="{{ route('stations.show', $station) }}">Today</a>
+        <a class="button" href="{{ route('stations.show', $station) }}?day={{ date('Y-m-d', $day + 24 * 60 * 60) }}">Next day&nbsp; &raquo;</a>
+    </div>
+
+    <div class="box">
+        <h2 class="title is-4">Temperature</h2>
+        <canvas id="temperature_chart"></canvas>
+    </div>
+
+    <div class="box">
+        <h2 class="title is-4">Humidity</h2>
+        <canvas id="humidity_chart"></canvas>
+    </div>
+
+    <div class="box">
+        <h2 class="title is-4">Light strength</h2>
+        <canvas id="light_chart"></canvas>
+    </div>
+
+    <div class="box">
+        <h2 class="title is-4">Outside Temperature</h2>
+        <canvas id="outside_temperature_chart"></canvas>
+    </div>
+
+    <div class="box">
+        <h2 class="title is-4">Outside Humidity</h2>
+        <canvas id="outside_humidity_chart"></canvas>
+    </div>
+
+    <div class="buttons has-addons is-centered">
+        <a class="button" href="/stations/{{ $station->id }}/{{ date('Y-m-d', $day - 24 * 60 * 60) }}">&laquo; &nbsp;Previous day</a>
+        <a class="button" href="/stations/{{ $station->id }}">Today</a>
+        <a class="button" href="/stations/{{ $station->id }}/{{ date('Y-m-d', $day + 24 * 60 * 60) }}">Next day&nbsp; &raquo;</a>
+    </div>
+</div>
+
+<script>
+// Map
+var point = JSON.parse('[{{ $station->latitude }}, {{ $station->longitude }}]');
+
+var map = L.map('map-container').setView(point, 15);
+map.scrollWheelZoom.disable();
+map.attributionControl.setPrefix('');
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+L.marker(point).addTo(map);
+
+// Charts
+var chart_options = {
+    aspectRatio: 2.5,
+    animation: {
+        duration: 0
+    },
+    elements: {
+        point: {
+            radius: 0,
+            hitRadius: 4
+        }
+    }
+};
+
+new Chart(document.getElementById('temperature_chart').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: JSON.parse('{!! json_encode($labels, JSON_HEX_APOS) !!}'),
+        datasets: [{
+            label: 'Temperature (\u00B0C)',
+            backgroundColor: '#999',
+            borderColor: '#333',
+            fill: false,
+            data: JSON.parse('{!! json_encode($temperatureData, JSON_HEX_APOS) !!}')
+        }]
+    },
+    options: chart_options
+});
+
+new Chart(document.getElementById('humidity_chart').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: JSON.parse('{!! json_encode($labels, JSON_HEX_APOS) !!}'),
+        datasets: [{
+            label: 'Humidity (%)',
+            backgroundColor: '#999',
+            borderColor: '#333',
+            fill: false,
+            data: JSON.parse('{!! json_encode($humidityData, JSON_HEX_APOS) !!}')
+        }]
+    },
+    options: chart_options
+});
+
+new Chart(document.getElementById('light_chart').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: JSON.parse('{!! json_encode($labels, JSON_HEX_APOS) !!}'),
+        datasets: [{
+            label: 'Light strength (lux)',
+            backgroundColor: '#999',
+            borderColor: '#333',
+            fill: false,
+            data: JSON.parse('{!! json_encode($lightData, JSON_HEX_APOS) !!}')
+        }]
+    },
+    options: chart_options
+});
+
+new Chart(document.getElementById('outside_temperature_chart').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: JSON.parse('{!! json_encode($outsideLabels, JSON_HEX_APOS) !!}'),
+        datasets: [{
+            label: 'Outside Temperature (\u00B0C)',
+            backgroundColor: '#999',
+            borderColor: '#333',
+            fill: false,
+            data: JSON.parse('{!! json_encode($outsideTemperatureData, JSON_HEX_APOS) !!}')
+        }]
+    },
+    options: chart_options
+});
+
+new Chart(document.getElementById('outside_humidity_chart').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: JSON.parse('{!! json_encode($outsideLabels, JSON_HEX_APOS) !!}'),
+        datasets: [{
+            label: 'Outside Humidity (%)',
+            backgroundColor: '#999',
+            borderColor: '#333',
+            fill: false,
+            data: JSON.parse('{!! json_encode($outsideHumidityData, JSON_HEX_APOS) !!}')
+        }]
+    },
+    options: chart_options
+});
+</script>
+
+@view('layout.footer')

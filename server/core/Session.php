@@ -16,29 +16,9 @@ class Session {
         }
         static::set('_flash', []);
 
-        // Check CSRF token
-        if (static::get('_csrf_token') == null) {
-            static::set('_csrf_token', bin2hex(random_bytes(16)));
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if (request('_csrf_token') == null) {
-                Redirect::back()->withInput()->withErrors([
-                    '_csrf_token' => [
-                        'You did not use the cross-site request forgery token'
-                    ]
-                ])->run();
-            } else {
-                if (hash_equals(request('_csrf_token'), static::get('_csrf_token'))) {
-                    static::set('_csrf_token', bin2hex(random_bytes(16)));
-                } else {
-                    Redirect::back()->withInput()->withErrors([
-                        '_csrf_token' => [
-                            'Your cross-site request forgery token is not valid'
-                        ]
-                    ])->run();
-                }
-            }
+        // Create CSRF token if it not exists
+        if (Session::get('_csrf_token') == null) {
+            Session::set('_csrf_token', bin2hex(random_bytes(16)));
         }
     }
 

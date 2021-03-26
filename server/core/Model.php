@@ -139,7 +139,7 @@ abstract class Model {
         return Database::query('DELETE FROM `' . static::table() . '` WHERE ' . implode(' AND ', $wheres), ...array_values($where));
     }
 
-    public static function get($where = null): array {
+    public static function all($where = null): array {
         return static::select($where)->fetchAll();
     }
 

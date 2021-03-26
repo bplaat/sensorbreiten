@@ -1,0 +1,35 @@
+@view('layout.header', [ 'title' => $event->name . ' - Events' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li><a href="{{ route('events.index') }}">Events</a></li>
+        <li class="is-active"><a href="{{ route('events.show', $event) }}">{{ $event->name }}</a></li>
+    </ul>
+</div>
+
+<div class="content">
+    <h1 class="title">{{ $event->name }}</h1>
+
+    @if ($event->active):
+        <p><span class="tag is-success">ACTIVE</span></p>
+    @endif
+
+    @if ($event->type == Events::TYPE_LED):
+        <p>Set the LED of <a href="{{ route('stations.show', $event->station) }}">{{ $event->station->name }}</a> on for <code>{{ $event->duration }} ms</code></p>
+    @endif
+    @if ($event->type == Events::TYPE_BEEPER):
+        <p>Set the beeper of <a href="{{ route('stations.show', $event->station) }}">{{ $event->station->name }}</a> on at <code>{{ $event->frequency }} Hz</code> for <code>{{ $event->duration }} ms</code></p>
+    @endif
+
+    <pre style="white-space: pre-wrap;">{{ $event->trigger }}</pre>
+
+    @if (Auth::user()->role >= Users::ROLE_MODERATOR):
+        <div class="buttons">
+            <a class="button is-link" href="{{ route('events.edit', $event) }}">Edit event</a>
+            <a class="button is-danger" href="{{ route('events.delete', $event) }}">Delete event</a>
+        </div>
+    @endif
+</div>
+
+@view('layout.footer')

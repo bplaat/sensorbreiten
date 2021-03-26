@@ -1,0 +1,109 @@
+@view('layout.header', [ 'title' => 'Create - Users - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li><a href="{{ route('admin.home') }}">Admin</a></li>
+        <li><a href="{{ route('admin.users.index') }}">Users</a></li>
+        <li class="is-active"><a href="{{ route('admin.users.create') }}">Create</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Create new user</h1>
+
+<form method="POST" action="{{ route('admin.users.store') }}">
+    @csrf()
+
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label" for="firstname">Firstname</label>
+
+                <div class="control">
+                    <input class="input {{ hasErrors('firstname') ? 'is-danger' : '' }}" type="text" id="firstname"
+                        name="firstname" value="{{ old('firstname') }}" required>
+                </div>
+
+                @foreach (errors('firstname') as $error):
+                    <p class="help is-danger">{{ $error }}</p>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="field">
+                <label class="label" for="lastname">Lastname</label>
+
+                <div class="control">
+                    <input class="input {{ hasErrors('lastname') ? 'is-danger' : '' }}" type="text" id="lastname"
+                        name="lastname" value="{{ old('lastname') }}" required>
+                </div>
+
+                @foreach (errors('lastname') as $error):
+                    <p class="help is-danger">{{ $error }}</p>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="email">Email address</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('email') ? 'is-danger' : '' }}" type="email" id="email"
+                name="email" value="{{ old('email') }}" required>
+
+            @foreach (errors('email') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="password">New password</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('password') ? 'is-danger' : '' }}"
+                type="password" id="password" name="password" required>
+
+            @foreach (errors('password') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="password_confirmation">Confirm new password</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('password') ? 'is-danger' : '' }}" type="password"
+                id="password_confirmation" name="password_confirmation" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="role">Role</label>
+
+        <div class="control">
+            <div class="select is-fullwidth {{ hasErrors('role') ? 'is-danger' : '' }}"">
+                <select id="role" name="role" required>
+                    <option value="{{ Users::ROLE_NORMAL }}" {{ old('role', Users::ROLE_NORMAL) == Users::ROLE_NORMAL ? 'selected' : '' }}>Normal</option>
+                    <option value="{{ Users::ROLE_MODERATOR }}" {{ old('role', Users::ROLE_NORMAL) == Users::ROLE_MODERATOR ? 'selected' : '' }}>Moderator</option>
+                    <option value="{{ Users::ROLE_ADMIN }}" {{ old('role', Users::ROLE_NORMAL) == Users::ROLE_ADMIN ? 'selected' : '' }}>Admin</option>
+                </select>
+            </div>
+
+            @foreach (errors('role') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-link" type="submit">Create new user</button>
+        </div>
+    </div>
+</form>
+
+@view('layout.footer')

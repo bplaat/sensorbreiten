@@ -1,0 +1,63 @@
+@view('layout.header', [ 'title' => 'Edit - ' . $station->name . ' - Stations' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li><a href="{{ route('stations.index') }}">Stations</a></li>
+        <li><a href="{{ route('stations.show', $station) }}">{{ $station->name }}</a></li>
+        <li class="is-active"><a href="{{ route('stations.edit', $station) }}">Edit</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Edit station</h1>
+
+<form method="POST" action="{{ route('stations.update', $station) }}">
+    @csrf()
+
+    <div class="field">
+        <label class="label" for="name">Name</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('name') ? 'is-danger' : '' }}"
+                type="text" id="name" name="name" value="{{ old('name', $station->name) }}" autofocus required>
+
+            @foreach (errors('name') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="latitude">Latitude</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('latitude') ? 'is-danger' : '' }}"
+                type="text" id="latitude" name="latitude" value="{{ old('latitude', $station->latitude) }}" required>
+
+            @foreach (errors('latitude') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="longitude">Longitude</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('longitude') ? 'is-danger' : '' }}"
+                type="text" id="longitude" name="longitude" value="{{ old('longitude', $station->longitude) }}" required>
+
+            @foreach (errors('longitude') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-link" type="submit">Edit station</button>
+        </div>
+    </div>
+</form>
+
+@view('layout.footer')

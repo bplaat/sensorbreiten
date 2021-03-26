@@ -1,0 +1,16 @@
+@view('layout.header', [ 'title' => 'Home' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li class="is-active"><a href="{{ route('admin.home') }}">Admin</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Admin</h1>
+
+<div class="buttons">
+    <a class="button" href="{{ route('admin.users.index') }}">Users</a>
+</div>
+
+@view('layout.footer')

@@ -1,0 +1,12 @@
+#include "config.hpp"
+
+String api_url = "";
+String https_fingerprint = "";
+
+String station_api_key = "";
+
+String local_wifi_ssid = "SENSORBREITEN_STATION";
+String local_wifi_password = "12345678";
+
+String wifi_ssid = "";
+String wifi_password = "";

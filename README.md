@@ -1,2 +1,2 @@
 # bplaat/sensorbreiten
-A renewed and expanded version of the Mad Turkey project
+SensorBreiten is a simple PHP based weather service with NodeMCU weather station clients

@@ -1,0 +1,111 @@
+@view('layout.header', [ 'title' => 'Create a new event - Events' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li><a href="{{ route('events.index') }}">Events</a></li>
+        <li class="is-active"><a href="{{ route('events.create') }}">Create</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Create a new event</h1>
+
+<form method="POST" action="{{ route('events.store') }}">
+    @csrf()
+
+    <div class="field">
+        <label class="label" for="name">Name</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('name') ? 'is-danger' : '' }}"
+                type="text" id="name" name="name" value="{{ old('name') }}" autofocus required>
+
+            @foreach (errors('name') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="station_id">Station</label>
+
+        <div class="control">
+            <div class="select is-fullwidth {{ hasErrors('station_id') ? 'is-danger' : '' }}">
+                <select id="station_id" name="station_id" required>
+                    @foreach ($stations as $station):
+                        <option value="{{ $station->id }}" {{ old('station_id') == $station->id ? 'selected' : '' }}>{{ $station->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            @foreach (errors('station_id') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="trigger">Trigger PHP code (<u>please don't cross command our site!</u>)</label>
+
+        <div class="control">
+            <textarea class="textarea {{ hasErrors('trigger') ? 'is-danger' : '' }}"
+                style="font-family: monospace;" id="trigger" name="trigger"
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required>{{ old('trigger') }}</textarea>
+
+            @foreach (errors('trigger') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="type">Type</label>
+
+        <div class="control">
+            <div class="select is-fullwidth {{ hasErrors('type') ? 'is-danger' : '' }}">
+                <select class="input" id="type" name="type" required>
+                    <option value="{{ Events::TYPE_LED }}" {{ old('type', Events::TYPE_LED) == Events::TYPE_LED ? 'selected' : '' }}>LED</option>
+                    <option value="{{ Events::TYPE_BEEPER }}" {{ old('type', Events::TYPE_LED) == Events::TYPE_BEEPER ? 'selected' : '' }}>Beeper</option>
+                </select>
+            </div>
+
+            @foreach (errors('type') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="frequency">Frequency (Hz) (only for the beeper event type otherwise zero)</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('frequency') ? 'is-danger' : '' }}"
+                type="text" id="frequency" name="frequency" value="{{ old('frequency') }}" required>
+
+            @foreach (errors('frequency') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="duration">Duration (ms)</label>
+
+        <div class="control">
+            <input class="input {{ hasErrors('duration') ? 'is-danger' : '' }}"
+                type="text" id="duration" name="duration" value="{{ old('duration') }}" required>
+
+            @foreach (errors('duration') as $error):
+                <p class="help is-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-link" type="submit">Create new event</button>
+        </div>
+    </div>
+</form>
+
+@view('layout.footer')

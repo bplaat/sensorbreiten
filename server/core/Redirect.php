@@ -8,7 +8,7 @@ class Redirect {
         return $redirect;
     }
 
-    public static function toRoute(string $route, ...$parameters): Redirect {
+    public static function route(string $route, ...$parameters): Redirect {
         return static::to(route($route, ...$parameters));
     }
 

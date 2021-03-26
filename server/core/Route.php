@@ -12,7 +12,29 @@ function authMiddleware() {
     if (Auth::check()) {
         return true;
     } else {
-        return Redirect::toRoute('auth.login');
+        return Redirect::route('auth.login');
+    }
+}
+
+function apiMiddleware() {
+    define('IS_API', true);
+    header('Access-Control-Allow-Origin: *');
+    return true;
+}
+
+function moderatorMiddleware() {
+    if (Auth::check() && Auth::user()->role >= Users::ROLE_MODERATOR) {
+        return true;
+    } else {
+        return abort(403);
+    }
+}
+
+function adminMiddleware() {
+    if (Auth::check() && Auth::user()->role == Users::ROLE_ADMIN) {
+        return true;
+    } else {
+        return abort(403);
     }
 }
 
@@ -21,7 +43,10 @@ class Route {
 
     protected static array $routeMiddleware = [
         'guest' => 'guestMiddleware',
-        'auth' => 'authMiddleware'
+        'auth' => 'authMiddleware',
+        'api' => 'apiMiddleware',
+        'moderator' => 'moderatorMiddleware',
+        'admin' => 'adminMiddleware'
     ];
 
     public static function match(array $methods, string $route, callable $callback): Route {

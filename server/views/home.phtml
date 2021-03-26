@@ -1,5 +1,13 @@
 @view('layout.header', [ 'title' => 'Home' ])
 
-<h1 class="title">Home</h1>
+<div class="content">
+    @if (Auth::check()):
+        <h1 class="title">Welcome, {{ Auth::user()->firstname }}!</h1>
+    @else:
+        <h1 class="title">Welcome to SensorBreiten!</h1>
+    @endif
+
+    <p>SensorBreiten is a simple PHP based weather service with NodeMCU weather station clients</p>
+</div>
 
 @view('layout.footer')

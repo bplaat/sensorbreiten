@@ -1,5 +1,12 @@
 @view('layout.header', [ 'title' => 'Login' ])
 
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li class="is-active"><a href="{{ route('auth.login') }}">Login</a></li>
+    </ul>
+</div>
+
 <h1 class="title">Login</h1>
 
 @session('message'):

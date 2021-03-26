@@ -1,0 +1,49 @@
+@view('layout.header', [ 'title' => 'Events' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li class="is-active"><a href="{{ route('events.index') }}">Events</a></li>
+    </ul>
+</div>
+
+<div class="content">
+    <h1 class="title">Events</h1>
+
+    @if (count($events) > 0):
+        <div class="columns is-multiline">
+            @foreach ($events as $event):
+                <div class="column is-one-third">
+                    <div class="box content" style="height: 100%">
+                        <h2 class="title is-4">
+                            <a href="{{ route('events.show', $event) }}">{{ $event->name }}</a>
+
+                            @if ($event->active):
+                                <span class="tag is-pulled-right is-success">ACTIVE</span>
+                            @endif
+                        </h2>
+
+                        @if ($event->type == Events::TYPE_LED):
+                            <parse>Set the LED of <a href="{{ route('stations.show', $event->station) }}">{{ $event->station->name }}</a> on for <code>{{ $event->duration }} ms</code></p>
+                        @endif
+                        @if ($event->type == Events::TYPE_BEEPER):
+                            <p>Set the beeper of <a href="{{ route('stations.show', $event->station) }}">{{ $event->station->name }}</a> on at <code>{{ $event->frequency }} Hz</code> for <code>{{ $event->duration }} ms</code></p>
+                        @endif
+
+                        <pre style="white-space: pre-wrap;">{{ $event->trigger }}</pre>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @else:
+        <p><i>There are no events found</i></p>
+    @endif
+
+    @if (Auth::user()->role >= Users::ROLE_MODERATOR):
+        <div class="buttons">
+            <a class="button is-link" href="{{ route('events.create') }}">Create event</a>
+        </div>
+    @endif
+</div>
+
+@view('layout.footer')

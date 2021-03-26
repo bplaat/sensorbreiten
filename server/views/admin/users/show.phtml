@@ -1,0 +1,35 @@
+@view('layout.header', [ 'title' => $user->firstname . ' ' . $user->lastname . ' - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="{{ route('home') }}">SensorBreiten</a></li>
+        <li><a href="{{ route('admin.home') }}">Admin</a></li>
+        <li><a href="{{ route('admin.users.index') }}">Users</a></li>
+        <li class="is-active"><a href="{{ route('admin.users.show', $user) }}">{{ $user->firstname }} {{ $user->lastname }}</a></li>
+    </ul>
+</div>
+
+<div class="content">
+    <h1 class="title">{{ $user->firstname }} {{ $user->lastname }}</h1>
+
+    <p>
+        @if ($user->role == Users::ROLE_NORMAL):
+            <span class="tag is-success">NORMAL</span>
+        @endif
+        @if ($user->role == Users::ROLE_MODERATOR):
+            <span class="tag is-info">MODERATOR</span>
+        @endif
+        @if ($user->role == Users::ROLE_ADMIN):
+            <span class="tag is-danger">ADMIN</span>
+        @endif
+    </p>
+
+    <p><a class="tag" href="mailto:{{ $user->email }}">{{ $user->email }}</a></p>
+
+    <div class="buttons">
+        <a class="button is-link" href="{{ route('admin.users.edit', $user) }}">Edit user</a>
+        <a class="button is-danger" href="{{ route('admin.users.delete', $user) }}">Delete user</a>
+    </div>
+</div>
+
+@view('layout.footer')

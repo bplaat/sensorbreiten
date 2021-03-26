@@ -1,6 +1,7 @@
 <?php
 
 class SettingsController {
+    // Settings settings route
     public static function settings() {
         Auth::updateSession();
 
@@ -9,6 +10,7 @@ class SettingsController {
         return view('settings', [ 'activeSessions' => $activeSessions ]);
     }
 
+    // Settings change details route
     public static function changeDetails() {
         $fields = validate([
             'firstname' => 'required|min:2|max:191',
@@ -22,10 +24,11 @@ class SettingsController {
             'email' => $fields['email']
         ]);
 
-        return Redirect::toRoute('settings')
+        return Redirect::route('settings')
             ->with('message', 'Your user details have changed');
     }
 
+    // Settings change password route
     public static function changePassword() {
         $fields = validate([
             'current_password' => [
@@ -43,17 +46,18 @@ class SettingsController {
             'password' => password_hash($fields['password'], PASSWORD_DEFAULT)
         ]);
 
-        return Redirect::toRoute('settings')
+        return Redirect::route('settings')
             ->with('message', 'Your password has changed');
     }
 
+    // Settings revoke session route
     public static function revokeSession(object $session) {
         if ($session->session == Auth::session()) {
             return AuthController::logout();
         } else {
             Auth::revokeSession($session->session);
 
-            return Redirect::toRoute('settings')
+            return Redirect::route('settings')
                 ->with('message', 'You have revoked a session');
         }
     }
